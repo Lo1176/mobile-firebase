@@ -5,13 +5,13 @@ import {
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Button,
   KeyboardAvoidingView,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
+import { Button } from '../components/Button';
 
 export const Login = ({}) => {
   const [email, setEmail] = useState('');
@@ -55,30 +55,33 @@ export const Login = ({}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView behavior='padding'>
-        <TextInput
-          value={email}
-          style={styles.input}
-          placeholder='Email'
-          autoCapitalize='none'
-          onChangeText={(text) => setEmail(text)}
-        ></TextInput>
-        <TextInput
-          secureTextEntry={true}
-          value={password}
-          style={styles.input}
-          placeholder='Password'
-          autoCapitalize='none'
-          onChangeText={(text) => setPassword(text)}
-        ></TextInput>
+    <View style={styles.mainContainer}>
+      <KeyboardAvoidingView style={styles.container} behavior='padding'>
+        <View>
+          <TextInput
+            value={email}
+            style={styles.input}
+            placeholder='Email'
+            autoCapitalize='none'
+            onChangeText={(text) => setEmail(text)}
+          ></TextInput>
+          <TextInput
+            secureTextEntry={true}
+            value={password}
+            style={styles.input}
+            placeholder='Password'
+            autoCapitalize='none'
+            onChangeText={(text) => setPassword(text)}
+          ></TextInput>
+        </View>
+
         {loading ? (
           <ActivityIndicator size='large' color='#0000ff' />
         ) : (
-          <>
+          <View style={styles.btnContainer}>
             <Button title='Login' onPress={signIn} />
             <Button title='Create account' onPress={signUp} />
-          </>
+          </View>
         )}
       </KeyboardAvoidingView>
     </View>
@@ -86,11 +89,13 @@ export const Login = ({}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     justifyContent: 'center',
     marginHorizontal: 20,
   },
+  container: { display: 'flex', gap: 20 },
+  btnContainer: { display: 'flex', gap: 10 },
   input: {
     marginVertical: 4,
     height: 50,
