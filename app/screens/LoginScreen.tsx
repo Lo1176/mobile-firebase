@@ -13,7 +13,7 @@ import {
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import { Button } from '../components/Button';
 
-export const Login = ({}) => {
+export const LoginScreen = ({}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
