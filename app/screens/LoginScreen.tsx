@@ -12,6 +12,15 @@ import {
 } from 'react-native';
 import { FIREBASE_AUTH } from '../../FirebaseConfig';
 import { Button } from '../components/Button';
+import * as yup from 'yup';
+
+const validationSchema = yup.object().shape({
+  email: yup.string().email('Invalid email').required('Email is required'),
+  password: yup
+    .string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
+});
 
 export const LoginScreen = ({}) => {
   const [email, setEmail] = useState('');
@@ -22,10 +31,16 @@ export const LoginScreen = ({}) => {
   const signIn = async () => {
     setLoading(true);
     try {
+      await validationSchema.validate(
+        { email, password },
+        { abortEarly: false }
+      );
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log('🚀 ~ signIn ~ response:', response);
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof yup.ValidationError) {
+        error.errors.forEach((err) => alert(err));
+      } else if (error instanceof Error) {
         console.error(error.message);
         alert('Sign in failed: ' + error.message);
       }
@@ -37,6 +52,11 @@ export const LoginScreen = ({}) => {
   const signUp = async () => {
     setLoading(true);
     try {
+      await validationSchema.validate(
+        { email, password },
+        { abortEarly: false }
+      );
+
       const response = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -45,7 +65,9 @@ export const LoginScreen = ({}) => {
       console.log('🚀 ~ signIn ~ response:', response);
       alert('Check your emails!');
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof yup.ValidationError) {
+        error.errors.forEach((err) => alert(err));
+      } else if (error instanceof Error) {
         console.error(error.message);
         alert('Registration failed: ' + error.message);
       }
